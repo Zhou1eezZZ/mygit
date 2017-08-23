@@ -54,3 +54,37 @@ git checkout其实是用版本库里的版本替换工作区的版本，无论工作区是修改还是删除，都
 从现在起，只要本地作了提交，就可以通过命令：
 $ git push origin master
 把本地master分支的最新修改推送至GitHub，现在，你就拥有了真正的分布式版本库！
+
+//从远程库克隆项目
+$ git clone git@github.com:Zhou1eezZZ/gitskills.git
+
+//创建与合并分支
+首先，我们创建dev分支，然后切换到dev分支：
+$ git checkout -b dev
+Switched to a new branch 'dev'
+git checkout命令加上-b参数表示创建并切换，相当于以下两条命令：
+$ git branch dev
+$ git checkout dev
+Switched to branch 'dev'
+然后，用git branch命令查看当前分支：
+$ git branch
+* dev
+  master
+git branch命令会列出所有分支，当前分支前面会标一个*号。
+
+然后，我们就可以在dev分支上正常提交，比如对readme.txt做个修改
+然后提交：
+$ git add readme.txt 
+$ git commit -m "branch test"
+现在，dev分支的工作完成，我们就可以切换回master分支：
+$ git checkout master
+Switched to branch 'master'
+切换回master分支后，再查看一个readme.txt文件，刚才添加的内容不见了！因为那个提交是在dev分支上，而master分支此刻的提交点并没有变：
+现在，我们把dev分支的工作成果合并到master分支上：
+$ git merge dev
+git merge命令用于合并指定分支到当前分支。
+合并完成后，就可以放心地删除dev分支了：
+$ git branch -d dev
+Deleted branch dev (was fec145a).
+
+因为创建、合并和删除分支非常快，所以Git鼓励你使用分支完成某个任务，合并后再删掉分支，这和直接在master分支上工作效果是一样的，但过程更安全。
