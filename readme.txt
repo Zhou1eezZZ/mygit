@@ -29,3 +29,12 @@ $ git reset --hard HEAD^
 $ git reset --hard 3628164
 Git提供了一个命令git reflog用来记录你的每一次命令：（找commit id）
 $ git reflog
+
+命令git checkout -- readme.txt意思就是，把readme.txt文件在工作区的修改全部撤销
+总之，就是让这个文件回到最近一次git commit或git add时的状态。
+$ git checkout -- readme.txt
+若已经git add到缓存区
+用命令git reset HEAD file可以把暂存区的修改撤销掉（unstage），重新放回工作区：
+$ git reset HEAD readme.txt
+git reset命令既可以回退版本，也可以把暂存区的修改回退到工作区
+再执行git checkout能在工作区撤销修改
