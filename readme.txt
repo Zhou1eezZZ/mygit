@@ -127,3 +127,44 @@ $ git log --graph --pretty=oneline --abbrev-commit
 首先，master分支应该是非常稳定的，也就是仅用来发布新版本，平时不能在上面干活；
 那在哪干活呢？干活都在dev分支上，也就是说，dev分支是不稳定的，到某个时候，比如1.0版本发布时，再把dev分支合并到master上，在master分支发布1.0版本；
 你和你的小伙伴们每个人都在dev分支上干活，每个人都有自己的分支，时不时地往dev分支上合并就可以了。（每个人在dev下的分支里干活）
+
+//bug分支
+每个bug都可以通过一个新的临时分支来修复，修复后，合并分支，然后将临时分支删除。
+Git提供了一个stash功能，可以把当前工作现场“储藏”起来，等以后恢复现场后继续工作：
+$ git stash
+Saved working directory and index state WIP on dev: 6224937 add merge
+HEAD is now at 6224937 add merge
+现在，用git status查看工作区，就是干净的（除非有没有被Git管理的文件），因此可以放心地创建分支来修复bug。
+首先确定要在哪个分支上修复bug，假定需要在master分支上修复，就从master创建临时分支：
+$ git checkout master
+Switched to branch 'master'
+Your branch is ahead of 'origin/master' by 6 commits.
+$ git checkout -b issue-101
+Switched to a new branch 'issue-101'
+现在修复bug 然后提交
+$ git add readme.txt 
+$ git commit -m "fix bug 101"
+[issue-101 cc17032] fix bug 101
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+修复完成后，切换到master分支，并完成合并，最后删除issue-101分支：
+$ git checkout master
+Switched to branch 'master'
+Your branch is ahead of 'origin/master' by 2 commits.
+$ git merge --no-ff -m "merged bug fix 101" issue-101
+Merge made by the 'recursive' strategy.
+ readme.txt |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+$ git branch -d issue-101
+Deleted branch issue-101 (was cc17032).
+
+工作区是干净的，刚才的工作现场存到哪去了？用git stash list命令看看：
+$ git stash list
+stash@{0}: WIP on dev: 6224937 add merge
+
+工作现场还在，Git把stash内容存在某个地方了，但是需要恢复一下，有两个办法：
+一是用git stash apply恢复，但是恢复后，stash内容并不删除，你需要用git stash drop来删除；
+另一种方式是用git stash pop，恢复的同时把stash内容也删了：
+$ git stash pop
+
+你可以多次stash，恢复的时候，先用git stash list查看，然后恢复指定的stash，用命令：
+$ git stash apply stash@{0}
