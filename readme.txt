@@ -38,3 +38,14 @@ $ git checkout -- readme.txt
 $ git reset HEAD readme.txt
 git reset命令既可以回退版本，也可以把暂存区的修改回退到工作区
 再执行git checkout能在工作区撤销修改
+
+//删除文件
+$ rm test.txt
+一是确实要从版本库中删除该文件，那就用命令git rm删掉，并且git commit：
+$ git rm test.txt
+$ git commit -m "remove test.txt"
+现在，文件就从版本库中被删除了。
+
+另一种情况是删错了，因为版本库里还有呢，所以可以很轻松地把误删的文件恢复到最新版本：
+$ git checkout -- test.txt
+git checkout其实是用版本库里的版本替换工作区的版本，无论工作区是修改还是删除，都可以“一键还原”。
