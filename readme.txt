@@ -9,3 +9,7 @@ $ git add readme.txt
 第二步，用命令git commit告诉Git，把文件提交到仓库：
 $ git commit -m "wrote a readme file"
 git commit命令，-m后面输入的是本次提交的说明。
+
+git status命令可以让我们时刻掌握仓库当前的状态
+git diff顾名思义就是查看difference
+示例：$ git diff readme.txt
