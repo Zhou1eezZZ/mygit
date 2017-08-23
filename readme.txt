@@ -181,3 +181,72 @@ dev分支是开发分支，团队所有成员都需要在上面工作，所以也需要与远程同步；
 bug分支只用于在本地修复bug，就没必要推到远程了，除非老板要看看你每周到底修复了几个bug；
 feature分支是否推到远程，取决于你是否和你的小伙伴合作在上面开发。
 总之，就是在Git中，分支完全可以在本地自己藏着玩，是否推送，视你的心情而定！
+
+//标签管理
+tag就是一个让人容易记住的有意义的名字，它跟某个commit绑在一起。
+在Git中打标签非常简单，首先，切换到需要打标签的分支上：
+$ git branch
+* dev
+  master
+$ git checkout master
+Switched to branch 'master'
+然后，敲命令git tag <name>就可以打一个新标签：
+$ git tag v1.0
+默认标签是打在最新提交的commit上的。有时候，如果忘了打标签
+方法是找到历史提交的commit id，然后打上就可以了：
+$ git log --pretty=oneline --abbrev-commit
+6a5819e merged bug fix 101
+cc17032 fix bug 101
+7825a50 merge with no-ff
+6224937 add merge
+59bc1cb conflict fixed
+400b400 & simple
+75a857c AND simple
+fec145a branch test
+d17efd8 remove test.txt
+...
+比方说要对add merge这次提交打标签，它对应的commit id是6224937，敲入命令：
+$ git tag v0.9 6224937
+
+再用命令git tag查看标签：
+$ git tag
+v0.9
+v1.0
+注意，标签不是按时间顺序列出，而是按字母排序的。可以用git show <tagname>查看标签信息：
+$ git show v0.9
+commit 622493706ab447b6bb37e4e2a2f276a20fed2ab4
+Author: Michael Liao <askxuefeng@gmail.com>
+Date:   Thu Aug 22 11:22:08 2013 +0800
+
+    add merge
+...
+可以看到，v0.9确实打在add merge这次提交上。
+
+还可以创建带有说明的标签，用-a指定标签名，-m指定说明文字：
+$ git tag -a v0.1 -m "version 0.1 released" 3628164
+
+删除标签
+如果标签打错了，也可以删除：
+$ git tag -d v0.1
+Deleted tag 'v0.1' (was e078af9)
+因为创建的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除。
+如果要推送某个标签到远程，使用命令git push origin <tagname>：
+$ git push origin v1.0
+Total 0 (delta 0), reused 0 (delta 0)
+To git@github.com:michaelliao/learngit.git
+ * [new tag]         v1.0 -> v1.0
+或者，一次性推送全部尚未推送到远程的本地标签：
+$ git push origin --tags
+Counting objects: 1, done.
+Writing objects: 100% (1/1), 554 bytes, done.
+Total 1 (delta 0), reused 0 (delta 0)
+To git@github.com:michaelliao/learngit.git
+ * [new tag]         v0.2 -> v0.2
+ * [new tag]         v0.9 -> v0.9
+如果标签已经推送到远程，要删除远程标签就麻烦一点，先从本地删除：
+$ git tag -d v0.9
+Deleted tag 'v0.9' (was 6224937)
+然后，从远程删除。删除命令也是push，但是格式如下：
+$ git push origin :refs/tags/v0.9
+To git@github.com:michaelliao/learngit.git
+ - [deleted]         v0.9
