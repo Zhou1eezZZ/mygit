@@ -88,3 +88,42 @@ $ git branch -d dev
 Deleted branch dev (was fec145a).
 
 因为创建、合并和删除分支非常快，所以Git鼓励你使用分支完成某个任务，合并后再删掉分支，这和直接在master分支上工作效果是一样的，但过程更安全。
+
+//合并冲突
+Git用<<<<<<<，=======，>>>>>>>标记出不同分支的内容，我们修改如下后保存 再提交
+用带参数的git log也可以看到分支的合并情况：
+$ git log --graph --pretty=oneline --abbrev-commit
+*   59bc1cb conflict fixed
+|\
+| * 75a857c AND simple
+* | 400b400 & simple
+|/
+* fec145a branch test
+...
+最后，删除feature1分支：
+$ git branch -d feature1
+Deleted branch feature1 (was 75a857c).
+工作完成。
+当Git无法自动合并分支时，就必须首先解决冲突。解决冲突后，再提交，合并完成。
+
+//分支管理策略
+通常，合并分支时，如果可能，Git会用Fast forward模式，但这种模式下，删除分支后，会丢掉分支信息。
+如果要强制禁用Fast forward模式，Git就会在merge时生成一个新的commit，这样，从分支历史上就可以看出分支信息。
+准备合并dev分支，请注意--no-ff参数，表示禁用Fast forward：
+$ git merge --no-ff -m "merge with no-ff" dev
+Merge made by the 'recursive' strategy.
+ readme.txt |    1 +
+ 1 file changed, 1 insertion(+)
+因为本次合并要创建一个新的commit，所以加上-m参数，把commit描述写进去。
+合并后，我们用git log看看分支历史：
+$ git log --graph --pretty=oneline --abbrev-commit
+*   7825a50 merge with no-ff
+|\
+| * 6224937 add merge
+|/
+*   59bc1cb conflict fixed
+...
+在实际开发中，我们应该按照几个基本原则进行分支管理：
+首先，master分支应该是非常稳定的，也就是仅用来发布新版本，平时不能在上面干活；
+那在哪干活呢？干活都在dev分支上，也就是说，dev分支是不稳定的，到某个时候，比如1.0版本发布时，再把dev分支合并到master上，在master分支发布1.0版本；
+你和你的小伙伴们每个人都在dev分支上干活，每个人都有自己的分支，时不时地往dev分支上合并就可以了。（每个人在dev下的分支里干活）
