@@ -1,6 +1,17 @@
 This is my git.
 Git is free software.
 Git Git Git.
+//创建版本库
+创建一个版本库非常简单，首先，选择一个合适的地方，创建一个空目录：
+$ mkdir learngit
+$ cd learngit
+$ pwd
+/Users/michael/learngit
+第二步，通过git init命令把这个目录变成Git可以管理的仓库：
+$ git init
+Initialized empty Git repository in /Users/michael/learngit/.git/
+第三步，把需要git的文件放进去
+
 //添加文件到git
 把要添加的文件放在mygit目录下 /C/Users/Administrator/mygit
 
